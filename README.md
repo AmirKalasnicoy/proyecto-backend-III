@@ -52,18 +52,19 @@ Genera **50 usuarios simulados** con los siguientes campos:
 ### 🔹 `/api/mocks/generateData`  *(POST)*
 Genera e **inserta** usuarios y mascotas en MongoDB Atlas.
 
+ ### 📸 Colección `pets`
+![Vista de MongoDB Atlas - pets](./imagenes_mongo/test_pets.png)
+
+### 📸 Colección `users`
+![Vista de MongoDB Atlas - users](./imagenes_mongo/test_users.png)
+
 #### Ejemplo de body:
 ```json
 {
   "users": 20,
   "pets": 30
 }
-Los datos se insertan en las colecciones:
- - test.users
- - test.pets
 
- ### 📸 Colección `pets`
-![Vista de MongoDB Atlas - pets](./imagenes_mongo/test_pets.png)
 
-### 📸 Colección `users`
-![Vista de MongoDB Atlas - users](./imagenes_mongo/test_users.png)
+
+
