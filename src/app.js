@@ -3,14 +3,19 @@ import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import mocksRouter from "./routes/mocks.router.js";
+import usersRouter from "./routes/users.router.js";
+import petsRouter from "./routes/pets.router.js";
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.use("/api/mocks", mocksRouter);
 app.get("/health", (_req, res) => res.json({ ok: true }));
+app.use("/api/users", usersRouter);
+app.use("/api/pets", petsRouter);
 
 const PORT = process.env.PORT || 3000;
 
@@ -28,3 +33,8 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ status: "error", message: err.message || "Internal Server Error" });
+});
