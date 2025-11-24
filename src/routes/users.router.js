@@ -3,7 +3,17 @@ import { UserModel } from "../models/user.model.js";
 
 const router = Router();
 
-// Lista todos los usuarios (con sus pets como ObjectId)
+/**
+ * @openapi
+ * /api/users:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Obtener todos los usuarios
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios obtenida correctamente
+ */
 router.get("/", async (_req, res, next) => {
   try {
     const users = await UserModel.find().lean();
@@ -12,3 +22,4 @@ router.get("/", async (_req, res, next) => {
 });
 
 export default router;
+

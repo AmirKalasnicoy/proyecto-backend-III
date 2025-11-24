@@ -3,19 +3,52 @@ import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+
 import mocksRouter from "./routes/mocks.router.js";
 import usersRouter from "./routes/users.router.js";
 import petsRouter from "./routes/pets.router.js";
+import adoptionRouter from "./routes/adoption.router.js";
+
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+
+// SWAGGER CONFIG
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Backend III - API Documentation",
+      version: "1.0.0",
+    },
+  },
+  apis: [path.join(__dirname, "/routes/*.js")],
+};
+
+const swaggerSpecs = swaggerJSDoc(swaggerOptions);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
+
+//  ROUTES
+
 app.use("/api/mocks", mocksRouter);
 app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/users", usersRouter);
 app.use("/api/pets", petsRouter);
+app.use("/api/adoption", adoptionRouter);
+
 
 const PORT = process.env.PORT || 3000;
 
