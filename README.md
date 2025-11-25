@@ -1,33 +1,19 @@
 # 🐶🐱 Proyecto Backend III – Mocking, Adopciones, Tests y Docker
 
-Este proyecto corresponde a las **Entregas N°1 y N°2** del curso **Backend III (Coderhouse)**. Incluye:
+Este proyecto corresponde a la **Entrega Final** del curso **Backend III (Coderhouse)**. Incluye:
 
 - Mocking de usuarios y mascotas
 - Inserción masiva de datos
 - CRUD de adopciones
 - Documentación con Swagger
 - Tests funcionales con Jest + Supertest
-- Dockerfile, imagen Docker pública y ejecución vía DockerHub
 - Uso de MongoDB Atlas + Mongoose
+- Dockerfile listo para producción
+- Imagen Docker subida a DockerHub
 
 ---
 
-# 📌 Contenido
-
-- Tecnologías utilizadas
-- Estructura del proyecto
-- Documentación con Swagger
-- Endpoints principales
-- Tests funcionales
-- Docker
-- Variables de entorno
-- Instrucciones de ejecución
-- Capturas de MongoDB
-- Estado final de las entregas
-
----
-
-# ⚙️ Tecnologías utilizadas
+# 📦 Tecnologías utilizadas
 
 - Node.js
 - Express
@@ -38,12 +24,12 @@ Este proyecto corresponde a las **Entregas N°1 y N°2** del curso **Backend III
 - Dotenv
 - Jest
 - Supertest
-- Swagger UI + swagger-jsdoc
+- Swagger UI + Swagger-JSDoc
 - Docker
 
 ---
 
-# 📁 Estructura del proyecto
+# 📁 Estructura del Proyecto
 
 ```
 src/
@@ -66,18 +52,17 @@ Dockerfile
 .env
 package.json
 README.md
-imagenes_mongo/
 ```
 
 ---
 
 # 📘 Documentación con Swagger
 
-La documentación del módulo **Users** está disponible en:
+La documentación está disponible en:
 
-👉 http://localhost:3000/api/docs
+👉 **http://localhost:3000/api/docs**
 
-Ejemplo de anotación usada:
+Ejemplo de anotación utilizada:
 
 ```js
 /**
@@ -97,16 +82,22 @@ Ejemplo de anotación usada:
 
 # 🚀 Endpoints principales
 
-## `/api/mocks/mockingpets`
-Genera mascotas de ejemplo sin guardarlas en la base.
+## 🔹 Mocking
 
-## `/api/mocks/mockingusers`
-Genera **50 usuarios mock** con contraseña encriptada, rol aleatorio y pets vacío.
+### `GET /api/mocks/mockingusers`
+Genera usuarios mock (NO se guardan en DB).
 
-## `/api/mocks/generateData` (POST)
-Genera e inserta usuarios y mascotas.
+### `GET /api/mocks/mockingpets`
+Genera mascotas mock (NO se guardan en DB).
 
-Ejemplo:
+### `GET /api/mocks/mockingadoptions`
+Genera adopciones aleatorias (SÍ se guardan en DB).  
+Requiere usuarios y mascotas creados previamente.
+
+### `POST /api/mocks/generateData`
+Inserta usuarios y mascotas reales en MongoDB.
+
+Body:
 ```json
 {
   "users": 20,
@@ -114,23 +105,51 @@ Ejemplo:
 }
 ```
 
-## `/api/adoption`
-- POST → Crear adopción
-- GET → Obtener todas las adopciones
+---
+
+## 🔹 Users
+
+### `GET /api/users`
+Obtiene todos los usuarios.
 
 ---
 
-# 🧪 Tests funcionales
+## 🔹 Pets
 
-Desarrollados con **Jest + Supertest**.
+### `GET /api/pets`
+Obtiene todas las mascotas.
 
-Incluyen:
-- Test de creación de adopción
-- Test de obtención de adopciones
-- Base de datos de pruebas con `MONGO_URL_TEST`
-- Limpieza automática de datos
+---
+
+## 🔹 Adoptions
+
+### `POST /api/adoption`
+Crear adopción.
+
+Body:
+```json
+{
+  "user": "ObjectIdUser",
+  "pet": "ObjectIdPet"
+}
+```
+
+### `GET /api/adoption`
+Obtiene todas las adopciones con populate.
+
+---
+
+# 🧪 Tests funcionales (Jest + Supertest)
+
+Los tests cubren:
+
+- Crear adopción (POST)
+- Listar adopciones (GET)
+- Uso de una base separada con `MONGO_URL_TEST`
+- Limpieza automática al finalizar
 
 Ejecutar tests:
+
 ```
 npm test
 ```
@@ -139,9 +158,10 @@ npm test
 
 # 🐳 Docker
 
-Este proyecto está dockerizado con un Dockerfile listo para producción.
+Este proyecto está dockerizado.
 
-### Dockerfile:
+## Dockerfile
+
 ```dockerfile
 FROM node:18
 WORKDIR /app
@@ -152,40 +172,37 @@ EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
----
+## Imagen pública en DockerHub
 
-# 🐳 Imagen Docker pública
+👉 **https://hub.docker.com/r/amirkalasnicoy/proyecto-backend-iii**
 
-Disponible en DockerHub:
+## Ejecutar la imagen
 
-👉 https://hub.docker.com/r/amirkalasnicoy/proyecto-backend-iii
+1️⃣ Descargar:
 
-## Ejecutar con Docker
-
-1️⃣ Descargar la imagen:
 ```
 docker pull amirkalasnicoy/proyecto-backend-iii
 ```
 
-2️⃣ Ejecutar el contenedor:
+2️⃣ Ejecutar:
+
 ```
 docker run -p 3000:3000 amirkalasnicoy/proyecto-backend-iii
 ```
 
-Disponible en:
-- http://localhost:3000
-- http://localhost:3000/api/docs
+Acceder a:
+
+- http://localhost:3000  
+- http://localhost:3000/api/docs  
 
 ---
 
-# 🔐 Variables de entorno
-
-Archivo `.env` requerido:
+# 🔐 Variables de entorno (.env)
 
 ```
 PORT=3000
 MONGO_URL=<cadena MongoAtlas>
-MONGO_URL_TEST=<cadena MongoAtlas de testing>
+MONGO_URL_TEST=<cadena MongoAtlasTesting>
 ```
 
 ---
@@ -193,21 +210,31 @@ MONGO_URL_TEST=<cadena MongoAtlas de testing>
 # ▶️ Instrucciones de ejecución (sin Docker)
 
 Instalar dependencias:
+
 ```
 npm install
 ```
 
-Ejecutar servidor:
+Iniciar servidor:
+
 ```
 npm start
 ```
 
 Modo desarrollo:
+
 ```
 npm run dev
 ```
 
+Ejecutar tests:
+
+```
+npm test
+```
+
 ---
+
 
 # 📸 Capturas de MongoDB
 
